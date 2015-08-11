@@ -1,0 +1,52 @@
+% Use Chicago-style Bibliography and citation
+\usepackage[authordate, backend=biber, uniquename=false, noibid]{biblatex-chicago}
+
+% Include author names in hyperlink (default is date only)
+\DeclareFieldFormat{citehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{#1}}
+
+\DeclareFieldFormat{textcitehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{%
+    #1%
+    \ifbool{cbx:parens}
+      {\bibcloseparen\global\boolfalse{cbx:parens}}
+      {}}}
+
+\savebibmacro{cite}
+\savebibmacro{textcite}
+
+\renewbibmacro*{cite}{%
+  \printtext[citehyperref]{%
+    \restorebibmacro{cite}%
+    \usebibmacro{cite}}}
+
+\renewbibmacro*{textcite}{%
+  \ifboolexpr{
+    ( not test {\iffieldundef{prenote}} and
+      test {\ifnumequal{\value{citecount}}{1}} )
+    or
+    ( not test {\iffieldundef{postnote}} and
+      test {\ifnumequal{\value{citecount}}{\value{citetotal}}} )
+  }
+    {\DeclareFieldAlias{textcitehyperref}{noformat}}
+    {}%
+  \printtext[textcitehyperref]{%
+    \restorebibmacro{textcite}%
+    \usebibmacro{textcite}}}
+
+% Make author names bold in References but not in body of paper
+\DeclareNameAlias{sortname}{last-first}
+\DeclareNameFormat{last-first}{\mkbibbold{%
+  \ifthenelse{\value{listcount}=1}{%
+    \iffirstinits
+      {\usebibmacro{name:last-first}{#1}{#4}{#5}{#7}}
+      {\usebibmacro{name:last-first}{#1}{#3}{#5}{#7}}%
+    \usebibmacro{name:andothers}
+  }{%
+    \iffirstinits
+      {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
+      {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}%
+    \usebibmacro{name:andothers}
+}}}
