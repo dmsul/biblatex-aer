@@ -1,0 +1,26 @@
+\documentclass{article}
+
+\input{biblatex-aer}
+\addbibresource{\jobname.bib}
+
+\usepackage[hidelinks]{hyperref}     % If you want your in-text citations to be links
+
+\begin{document}
+
+\section{Introduction}
+\begin{refsection}
+The ``shortauthor'' option is very nice for government agencies \parencite{EPA99}.
+\printbibliography
+\end{refsection}
+
+\section{Conclusion}
+\begin{refsection}
+And we can cite people like \textcite{Tiebout56} in-line without their names
+  being bold.
+\nocite{*}  % Add everything else in the .BIB file
+\printbibliography
+\end{refsection}
+
+
+\end{document}
+

@@ -37,16 +37,10 @@
     \usebibmacro{textcite}}}
 
 % Make author names bold in References but not in body of paper
-\DeclareNameAlias{sortname}{last-first}
-\DeclareNameFormat{last-first}{\mkbibbold{%
-  \ifthenelse{\value{listcount}=1}{%
-    \iffirstinits
-      {\usebibmacro{name:last-first}{#1}{#4}{#5}{#7}}
-      {\usebibmacro{name:last-first}{#1}{#3}{#5}{#7}}%
-    \usebibmacro{name:andothers}
-  }{%
-    \iffirstinits
-      {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
-      {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}%
-    \usebibmacro{name:andothers}
-}}}
+\AtBeginBibliography{
+    \renewcommand*{\mkbibnamefamily}[1]{\mkbibbold{#1}}
+    \renewcommand*{\mkbibnamegiven}[1]{\mkbibbold{#1}}
+    \renewcommand*{\mkbibnameprefix}[1]{\mkbibbold{#1}}
+    \renewcommand*{\mkbibnamesuffix}[1]{\mkbibbold{#1}}
+    \renewcommand*{\finalnamedelim}{\mkbibbold{\addcomma\addspace and\addspace}}
+}

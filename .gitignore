@@ -1,0 +1,19 @@
+# Latex byproducts
+*.aux
+*.log
+*.synctex*
+*.bbl
+*.blg
+*.ttt
+*.fff
+*.toc
+*.lof
+*.lot
+*.bcf
+*.fdb_latexmk
+*.run.xml
+*.fls
+*.soc
+*.nav
+*.snm
+*.out
