@@ -1,7 +1,7 @@
 % Use Chicago-style Bibliography and citation
 \usepackage[authordate, backend=biber, uniquename=false, noibid]{biblatex-chicago}
 
-% Include author names in hyperlink (default is date only)
+% % Include author names in hyperlink (default is date only)
 \DeclareFieldFormat{citehyperref}{%
   \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
   \bibhyperref{#1}}
@@ -36,11 +36,32 @@
     \restorebibmacro{textcite}%
     \usebibmacro{textcite}}}
 
-% Make author names bold in References but not in body of paper
+
+% % Make author names bold in References but not in body of paper
+
+% Check if name belongs to 'labelname' (Whoever the bib entry is sorted on,
+    % i.e., the author(s) or, if no author, editor(s), but not an editor if an author is
+    % present). This check keeps entries with both authors and editors from
+    % having both sets of names bolded.
+\def\ifmknamebold{%
+  \ifboolexpr{  test {\ifcurrentname{labelname}}
+                or test {\ifcurrentname{author}}
+                or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} )}}
+
+% Re-define naming commands to bold if necessary (but only in bibliography)
 \AtBeginBibliography{
-    \renewcommand*{\mkbibnamefamily}[1]{\mkbibbold{#1}}
-    \renewcommand*{\mkbibnamegiven}[1]{\mkbibbold{#1}}
-    \renewcommand*{\mkbibnameprefix}[1]{\mkbibbold{#1}}
-    \renewcommand*{\mkbibnamesuffix}[1]{\mkbibbold{#1}}
-    \renewcommand*{\finalnamedelim}{\mkbibbold{\addcomma\addspace and\addspace}}
+    \renewcommand*{\mkbibnamefamily}[1]{\ifmknamebold{\mkbibbold{#1}}{#1}}
+    \renewcommand*{\mkbibnamegiven}[1]{\ifmknamebold{\mkbibbold{#1}}{#1}}
+    \renewcommand*{\mkbibnameprefix}[1]{\ifmknamebold{\mkbibbold{#1}}{#1}}
+    \renewcommand*{\mkbibnamesuffix}[1]{\ifmknamebold{\mkbibbold{#1}}{#1}}
+    \renewcommand*{\finalnamedelim}{%
+        \ifmknamebold{%
+            \mkbibbold{\finalandcomma\addspace\bibstring{and}\addspace}%
+        }{%     % Check for 'if editors with no author, only add a comma before
+                % 'and' if there are more than three authors. ('labelname' guys don't
+                % need these check because first name is reversed and so always has a
+                % comma, even with only two people, e.g., Nash, Steve, and Amare
+                % Stoudamire.
+            \ifnumgreater{\value{liststop}}{2}{\finalandcomma}{}\addspace\bibstring{and}\addspace}%
+    }
 }
